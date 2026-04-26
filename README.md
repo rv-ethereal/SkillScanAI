@@ -12,23 +12,35 @@
 
 ## 📸 Product Screenshots
 
-### 🧑‍💼 HR Portal (Define Requirements)
-![HR Portal](assets/1.png)
+### 🧑‍💼 HR Portal
+<p align="center">
+  <img src="https://www.image2url.com/r2/default/images/1777194674327-bf335317-2d93-4374-b042-645778795aa4.png" width="400"/>
+</p>
 
-### 👤 Candidate Intake (Resume Upload)
-![Candidate Intake](assets/2.png)
+### 👤 Candidate Intake
+<p align="center">
+  <img src="https://www.image2url.com/r2/default/images/1777194750621-d4cd28b6-3f9a-4b5d-b7dc-eee7c15439c3.png" width="400"/>
+</p>
 
-### 🧠 AI Interview Agent (Dynamic Q&A)
-![Interview](assets/3.png)
+### 🧠 AI Interview
+<p align="center">
+  <img src="https://www.image2url.com/r2/default/images/1777194797595-a27b1e58-3abc-46c6-bf26-42f5e145f1e6.png" width="400"/>
+</p>
 
-### 📊 Skill Analysis Dashboard
-![Analysis](assets/4.png)
+### 📊 Analysis
+<p align="center">
+  <img src="https://cdn.corenexis.com/files/c/4547329720.png" width="400"/>
+</p>
 
-### 🎯 Match Score & Evaluation
-![Score](assets/5.png)
+### 🎯 Score
+<p align="center">
+  <img src="https://cdn.corenexis.com/files/c/9343977720.png" width="400"/>
+</p>
 
-### 🗺️ AI Learning Roadmap
-![Roadmap](assets/6.png)
+### 🗺️ Roadmap
+<p align="center">
+  <img src="https://cdn.corenexis.com/files/c/1884195720.png" width="400"/>
+</p>
 
 ---
 
@@ -137,22 +149,11 @@ Job Description → Resume Analysis → Skill Gap Detection
 ---
 
 ## 🧩 System Architecture
+A high-level overview of how SkillScan AI processes data and makes intelligent hiring decisions.
 
-
-User Input
-↓
-Resume Parser → Skill Extractor
-↓
-JD Analyzer → Requirement Mapping
-↓
-Skill Gap Engine
-↓
-AI Interview Agent
-↓
-Evaluation Engine
-↓
-Final Output (Score + Roadmap)
-
+<p align="center">
+  <img src="https://cdn.corenexis.com/files/c/9441328720.png" width="500"/>
+</p>
 
 ---
 
@@ -235,4 +236,4 @@ python -m streamlit run app.py
 
 ## 👨‍💻 Author
 
-**By: RAJ VERMA**
+**By: RAJ**
