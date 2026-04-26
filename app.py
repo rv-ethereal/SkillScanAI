@@ -143,35 +143,30 @@ def render_skill_card(skill_name, is_matched):
     assess_class = "fill-pass" if is_matched else "fill-fail"
     assess_val = "10/10" if is_matched else "4/10"
     
-    html = f"""
-    <div class="dash-card" style="height: 100%;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-            <h4 style="margin: 0; font-size: 18px; color: #1e293b;">{skill_name}</h4>
-            {badge_html}
-        </div>
-        
-        <div style="margin-bottom: 12px;">
-            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748b; font-weight: 600;">
-                <span>Required Level</span><span>10/10</span>
-            </div>
-            <div class="progress-track"><div class="progress-fill fill-req"></div></div>
-        </div>
-        
-        <div style="margin-bottom: 12px;">
-            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748b; font-weight: 600;">
-                <span>Claimed on Resume</span><span>{'8/10' if is_matched else '3/10'}</span>
-            </div>
-            <div class="progress-track"><div class="progress-fill fill-claim"></div></div>
-        </div>
-        
-        <div>
-            <div style="display: flex; justify-content: space-between; font-size: 14px; color: #0f172a; font-weight: 700;">
-                <span>AI Assessed Level</span><span>{assess_val}</span>
-            </div>
-            <div class="progress-track"><div class="progress-fill {assess_class}"></div></div>
-        </div>
-    </div>
-    """
+    html = f"""<div class="dash-card" style="height: 100%;">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+<h4 style="margin: 0; font-size: 18px; color: #1e293b;">{skill_name}</h4>
+{badge_html}
+</div>
+<div style="margin-bottom: 12px;">
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748b; font-weight: 600;">
+<span>Required Level</span><span>10/10</span>
+</div>
+<div class="progress-track"><div class="progress-fill fill-req"></div></div>
+</div>
+<div style="margin-bottom: 12px;">
+<div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748b; font-weight: 600;">
+<span>Claimed on Resume</span><span>{'8/10' if is_matched else '3/10'}</span>
+</div>
+<div class="progress-track"><div class="progress-fill fill-claim"></div></div>
+</div>
+<div>
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: #0f172a; font-weight: 700;">
+<span>AI Assessed Level</span><span>{assess_val}</span>
+</div>
+<div class="progress-track"><div class="progress-fill {assess_class}"></div></div>
+</div>
+</div>"""
     st.markdown(html, unsafe_allow_html=True)
 
 
