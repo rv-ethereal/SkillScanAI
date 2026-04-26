@@ -9,6 +9,9 @@ client_kwargs = {"api_key": api_key}
 if api_key.startswith("AIza"):
     client_kwargs["base_url"] = "https://generativelanguage.googleapis.com/v1beta/openai/"
     MODEL_NAME = "gemini-2.5-flash"
+elif api_key.startswith("gsk_"):
+    client_kwargs["base_url"] = "https://api.groq.com/openai/v1"
+    MODEL_NAME = "llama-3.1-8b-instant"
 else:
     MODEL_NAME = "gpt-4o-mini"
 
