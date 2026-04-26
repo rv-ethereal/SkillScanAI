@@ -12,96 +12,154 @@ from src.planner import generate_learning_roadmap
 
 load_dotenv()
 
-st.set_page_config(page_title="SkillScan AI Agent", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="SkillScan AI Assessment", page_icon="📊", layout="wide")
 
-# Custom Premium CSS Injection
+# Custom Light-Mode Professional Dashboard CSS
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     
-    html, body, [class*="css"]  {
-        font-family: 'Inter', sans-serif;
+    html, body, [class*="css"] {
+        font-family: 'Inter', sans-serif !important;
     }
     
-    /* Dark Premium Theme Overrides */
+    /* Clean Light Theme Background */
     .stApp {
-        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-        color: #f8fafc;
+        background-color: #f3f4f6;
+        color: #111827;
     }
     
-    /* Glassmorphism Cards */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 20px;
-        transition: transform 0.2s;
-    }
-    .glass-card:hover {
-        transform: translateY(-2px);
-        background: rgba(255, 255, 255, 0.08);
+    /* Dashboard Cards */
+    .dash-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        margin-bottom: 24px;
     }
     
-    /* Gradient Text */
-    .gradient-text {
-        background: linear-gradient(90deg, #38bdf8, #818cf8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    /* Typography */
+    h1, h2, h3, h4 { color: #111827; margin-top: 0; font-weight: 600; }
+    p { color: #4b5563; line-height: 1.5; }
+    
+    /* Badges */
+    .badge {
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 12px;
         font-weight: 600;
+        display: inline-block;
+        margin-bottom: 12px;
     }
+    .badge-blue { background: #eff6ff; color: #3b82f6; border: 1px solid #bfdbfe; }
+    .badge-green { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
+    .badge-red { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; }
     
-    /* Status Badges */
-    .badge-pass {
-        background: rgba(34, 197, 94, 0.2);
-        color: #4ade80;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-weight: bold;
-        border: 1px solid rgba(34, 197, 94, 0.3);
+    /* Dot Bars */
+    .dot {
+        width: 22px;
+        height: 6px;
+        border-radius: 3px;
+        background: #f3f4f6;
+        display: inline-block;
     }
-    .badge-fail {
-        background: rgba(239, 68, 68, 0.2);
-        color: #f87171;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-weight: bold;
-        border: 1px solid rgba(239, 68, 68, 0.3);
-    }
+    .dot.req { background: #111827; }
+    .dot.claim { background: #9ca3af; }
+    .dot.pass { background: #22c55e; }
+    .dot.fail { background: #ef4444; }
+    
+    /* Metrics Row */
+    .metric-col { text-align: center; }
+    .metric-val { font-size: 24px; font-weight: 700; }
+    .metric-label { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+    .metric-blue { color: #3b82f6; }
+    .metric-red { color: #ef4444; }
+    
 </style>
 """, unsafe_allow_html=True)
 
-def create_gauge_chart(score):
-    fig = go.Figure(go.Indicator(
-        mode = "gauge+number",
-        value = score,
-        domain = {'x': [0, 1], 'y': [0, 1]},
-        title = {'text': "Match Score", 'font': {'color': 'white'}},
-        gauge = {
-            'axis': {'range': [None, 10], 'tickcolor': "white"},
-            'bar': {'color': "#818cf8"},
-            'steps': [
-                {'range': [0, 4], 'color': "rgba(239, 68, 68, 0.3)"},
-                {'range': [4, 7], 'color': "rgba(234, 179, 8, 0.3)"},
-                {'range': [7, 10], 'color': "rgba(34, 197, 94, 0.3)"}
-            ],
-            'bgcolor': "rgba(255,255,255,0.05)",
-            'borderwidth': 0
-        }
+
+def create_donut_chart(score):
+    # Plotly Donut Chart similar to the screenshot
+    # Multiplied by 10 to make it out of 100
+    val = int(score * 10)
+    fig = go.Figure(go.Pie(
+        values=[val, 100-val],
+        labels=["Score", "Remaining"],
+        hole=0.75,
+        marker_colors=["#4f46e5", "#f3f4f6"],
+        textinfo='none',
+        hoverinfo='none',
+        direction='clockwise',
+        sort=False
     ))
+    
+    # Add text in the center
+    fig.add_annotation(
+        text=f"<span style='font-size: 36px; font-weight: bold; color: #111827;'>{val}</span><br><span style='font-size:12px; color:#6b7280;'>/ 100</span>",
+        x=0.5, y=0.5, font_size=20, showarrow=False
+    )
+    
     fig.update_layout(
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={'color': "white"},
-        height=300
+        showlegend=False,
+        margin=dict(t=0, b=0, l=0, r=0),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        height=200, width=200
     )
     return fig
 
+
+def render_skill_card(skill_name, is_matched):
+    # Determine stats
+    req = 8 if is_matched else 10
+    claim = 8 if is_matched else 3
+    assess = 8 if is_matched else 4
+    
+    badge_html = f"<div class='badge badge-green'>Meets Requirements</div>" if is_matched else f"<div class='badge badge-red'>Gap Identified</div>"
+    assess_class = "pass" if is_matched else "fail"
+    
+    def generate_dots(count, dot_class):
+        dots = "".join([f"<div class='dot {dot_class}'></div>" if i < count else "<div class='dot'></div>" for i in range(10)])
+        return dots
+
+    html = f"""
+    <div class="dash-card" style="height: 100%;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <h4 style="margin-bottom: 5px;">{skill_name}</h4>
+            <div style="text-align: right;">
+                <span style="font-size: 20px; font-weight: 700;">{assess}</span><span style="font-size:12px;color:#6b7280;">/10</span><br>
+                <span style="font-size:10px;color:#6b7280;">Assessed Level</span>
+            </div>
+        </div>
+        {badge_html}
+        
+        <div style="margin-top: 15px;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <div style="width: 70px; font-size: 12px; color: #6b7280;">Required</div>
+                <div style="display: flex; gap: 3px; flex-grow: 1;">{generate_dots(req, 'req')}</div>
+                <div style="font-size: 13px; font-weight: 600; width: 20px; text-align: right;">{req}</div>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <div style="width: 70px; font-size: 12px; color: #6b7280;">Claimed</div>
+                <div style="display: flex; gap: 3px; flex-grow: 1;">{generate_dots(claim, 'claim')}</div>
+                <div style="font-size: 13px; font-weight: 600; width: 20px; text-align: right;">{claim}</div>
+            </div>
+            <div style="display: flex; align-items: center;">
+                <div style="width: 70px; font-size: 12px; color: #111827; font-weight: 500;">Assessed</div>
+                <div style="display: flex; gap: 3px; flex-grow: 1;">{generate_dots(assess, assess_class)}</div>
+                <div style="font-size: 13px; font-weight: 600; width: 20px; text-align: right;">{assess}</div>
+            </div>
+        </div>
+    </div>
+    """
+    st.markdown(html, unsafe_allow_html=True)
+
+
 def initialize_session():
     if "phase" not in st.session_state:
-        st.session_state.phase = 0  # 0: HR, 1: Upload, 2: Interview, 3: Verdict
+        st.session_state.phase = 0
     if "messages" not in st.session_state:
         st.session_state.messages = []
     if "turn_count" not in st.session_state:
@@ -109,27 +167,27 @@ def initialize_session():
     if "missing_skills" not in st.session_state:
         st.session_state.missing_skills = []
 
+
 def main():
     initialize_session()
     
-    st.markdown("<h1 style='text-align: center;'><span class='gradient-text'>SkillScan AI</span> Agent</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #94a3b8;'>Conversational Assessment & Eligibility Engine</p>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: #111827;'><span style='color: #4f46e5;'>SkillScan</span> Assessment Platform</h2>", unsafe_allow_html=True)
     st.divider()
 
     if not os.getenv("OPENAI_API_KEY"):
-        st.error("API Key not found in `.env`. Please add OPENAI_API_KEY.")
+        st.error("API Key not found in `.env`.")
         return
 
     # -------------------------------------------------------------
     # PHASE 0: HR CONFIGURATION
     # -------------------------------------------------------------
     if st.session_state.phase == 0:
-        st.markdown("<div class='glass-card'><h3>👨‍💼 HR Portal: Configure Agent</h3></div>", unsafe_allow_html=True)
-        jd_text = st.text_area("Job Description", height=250, placeholder="Paste the full job description here...")
+        st.markdown("<div class='dash-card'><h3>👨‍💼 Configure Job Requirements</h3><p>Paste the target Job Description below.</p></div>", unsafe_allow_html=True)
+        jd_text = st.text_area("Job Description", height=250)
         
-        if st.button("Initialize Agent", type="primary"):
+        if st.button("Initialize Assessment", type="primary"):
             if jd_text.strip():
-                with st.spinner("Agent parsing requirements..."):
+                with st.spinner("Extracting parameters..."):
                     st.session_state.required_skills = extract_jd_skills(jd_text)
                     st.session_state.phase = 1
                 st.rerun()
@@ -137,19 +195,19 @@ def main():
                 st.warning("Please provide a Job Description.")
 
     # -------------------------------------------------------------
-    # PHASE 1: CANDIDATE UPLOAD & INITIAL ANALYSIS
+    # PHASE 1: CANDIDATE UPLOAD
     # -------------------------------------------------------------
     elif st.session_state.phase == 1:
-        st.markdown("<div class='glass-card'><h3>👋 Candidate Portal: Welcome</h3><p>I am your AI Assessor. Please upload your resume so we can begin.</p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='dash-card'><h3>Candidate Intake</h3><p>Upload your resume to begin the evaluation.</p></div>", unsafe_allow_html=True)
         resume_file = st.file_uploader("Upload Resume (PDF or TXT)", type=["pdf", "txt"])
         
-        if st.button("Analyze Profile", type="primary"):
+        if st.button("Start Assessment", type="primary"):
             if resume_file:
-                with st.spinner("Extracting & Analyzing..."):
+                with st.spinner("Scanning profile..."):
                     resume_text = extract_text(resume_file)
                     resume_skills = extract_resume_skills(resume_text)
                     
-                    time.sleep(2) # Smart delay to prevent Free Tier rate limit crash
+                    time.sleep(2)
                     score, matched, missing = analyze_skills(resume_skills, st.session_state.required_skills)
                     
                     st.session_state.resume_skills = resume_skills
@@ -157,74 +215,47 @@ def main():
                     st.session_state.matched_skills = matched
                     st.session_state.resume_score = score
                     
-                    # Generate the very first question to kick off chat
                     st.session_state.messages = []
-                    time.sleep(2) # Smart delay
+                    time.sleep(2)
                     initial_msg = get_chat_response([], missing)
                     st.session_state.messages.append({"role": "assistant", "content": initial_msg})
-                    
                     st.session_state.phase = 2
                 st.rerun()
-            else:
-                st.warning("Please upload a resume.")
 
     # -------------------------------------------------------------
     # PHASE 2: CONVERSATIONAL INTERVIEW
     # -------------------------------------------------------------
     elif st.session_state.phase == 2:
-        col1, col2 = st.columns([1, 2])
+        st.markdown("<div class='dash-card'><h3>Technical Evaluation</h3><p>Please answer the following questions based on your experience.</p></div>", unsafe_allow_html=True)
         
-        # Left Column: Analytics Visuals
-        with col1:
-            st.markdown("<div class='glass-card'><h4>Initial Resume Match</h4>", unsafe_allow_html=True)
-            st.plotly_chart(create_gauge_chart(st.session_state.resume_score), use_container_width=True)
-            
-            with st.expander("Matched Skills ✅"):
-                st.write(", ".join(st.session_state.matched_skills) if st.session_state.matched_skills else "None")
-            with st.expander("Missing Skills ❌"):
-                st.write(", ".join(st.session_state.missing_skills) if st.session_state.missing_skills else "None")
-            st.markdown("</div>", unsafe_allow_html=True)
-
-        # Right Column: Chat Interface
-        with col2:
-            st.markdown("<div class='glass-card'><h4>AI Technical Interview</h4>", unsafe_allow_html=True)
-            
-            # Display chat messages
-            for msg in st.session_state.messages:
-                with st.chat_message(msg["role"]):
-                    st.markdown(msg["content"])
-            
-            # Max 2 turns (User replies 2 times)
-            if st.session_state.turn_count < 2:
-                user_input = st.chat_input("Type your answer here...")
-                if user_input:
-                    # Append user message
-                    st.session_state.messages.append({"role": "user", "content": user_input})
-                    st.session_state.turn_count += 1
-                    
-                    with st.chat_message("user"):
-                        st.markdown(user_input)
-                    
-                    # If under max turns, ask next question
-                    if st.session_state.turn_count < 2:
-                        with st.spinner("AI is typing..."):
-                            reply = get_chat_response(st.session_state.messages, st.session_state.missing_skills)
-                            st.session_state.messages.append({"role": "assistant", "content": reply})
-                            st.rerun()
-                    else:
-                        # End of interview
-                        st.session_state.phase = 3
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+        
+        if st.session_state.turn_count < 2:
+            user_input = st.chat_input("Type your response...")
+            if user_input:
+                st.session_state.messages.append({"role": "user", "content": user_input})
+                st.session_state.turn_count += 1
+                
+                with st.chat_message("user"):
+                    st.markdown(user_input)
+                
+                if st.session_state.turn_count < 2:
+                    with st.spinner("Evaluating..."):
+                        reply = get_chat_response(st.session_state.messages, st.session_state.missing_skills)
+                        st.session_state.messages.append({"role": "assistant", "content": reply})
                         st.rerun()
-            st.markdown("</div>", unsafe_allow_html=True)
+                else:
+                    st.session_state.phase = 3
+                    st.rerun()
 
     # -------------------------------------------------------------
-    # PHASE 3: FINAL VERDICT & ROADMAP
+    # PHASE 3: FINAL ASSESSMENT RESULTS (THE NEW LIGHT-MODE UI)
     # -------------------------------------------------------------
     elif st.session_state.phase == 3:
-        st.markdown("<h2 style='text-align: center;'>Final Assessment Verdict</h2>", unsafe_allow_html=True)
-        
         if "final_decision" not in st.session_state:
-            with st.spinner("AI is synthesizing results and making a final decision..."):
+            with st.spinner("Compiling Final Report..."):
                 st.session_state.final_decision = calculate_final_eligibility(
                     st.session_state.messages, 
                     st.session_state.resume_score, 
@@ -233,50 +264,54 @@ def main():
                 
         decision = st.session_state.final_decision
         
-        # Display Verdict Card
-        card_html = f"""
-        <div class="glass-card" style="text-align: center; padding: 40px;">
-            <h1 style="font-size: 3rem; margin-bottom: 10px;">
-                <span class="{'badge-pass' if decision['eligible'] else 'badge-fail'}">
-                    {'🌟 ELIGIBLE' if decision['eligible'] else '❌ NOT ELIGIBLE'}
-                </span>
-            </h1>
-            <h3>Final Score: {decision['final_score']} / 10.0</h3>
-            <p style="font-size: 1.1rem; color: #cbd5e1; max-width: 600px; margin: 20px auto;">{decision['feedback']}</p>
-        </div>
-        """
-        st.markdown(card_html, unsafe_allow_html=True)
+        # 1. TOP CARD
+        st.markdown("<h3 style='margin-bottom: 20px;'>Assessment Results</h3>", unsafe_allow_html=True)
         
-        # Roadmap Section (Only show if not perfect score or not eligible)
-        if not decision['eligible'] or st.session_state.missing_skills:
-            st.divider()
-            st.markdown("<h3>Your Personalized Learning Roadmap</h3>", unsafe_allow_html=True)
-            st.caption("Based on the gaps identified in your resume and interview, follow this 3-week plan to upskill.")
+        badge_title = "Promising Candidate" if decision['eligible'] else "Not Eligible"
+        badge_class = "badge-blue" if decision['eligible'] else "badge-red"
+        metric_color = "metric-blue" if decision['eligible'] else "metric-red"
+        
+        # We use Streamlit columns to put the Donut on the left and Text on the right inside a container
+        with st.container():
+            st.markdown("<div class='dash-card'>", unsafe_allow_html=True)
+            col1, col2 = st.columns([1, 3])
             
-            if "roadmap" not in st.session_state:
-                with st.spinner("Generating curated learning plan..."):
-                    st.session_state.roadmap = generate_learning_roadmap(st.session_state.missing_skills)
+            with col1:
+                st.plotly_chart(create_donut_chart(decision['final_score']), use_container_width=True, config={'displayModeBar': False})
+                
+            with col2:
+                st.markdown(f"<div class='badge {badge_class}'>{badge_title}</div>", unsafe_allow_html=True)
+                st.markdown(f"<p style='margin-bottom: 25px;'>{decision['feedback']}</p>", unsafe_allow_html=True)
+                
+                # Metrics Row
+                m_col1, m_col2, m_col3 = st.columns(3)
+                total_skills = len(st.session_state.required_skills)
+                gaps = len(st.session_state.missing_skills)
+                
+                with m_col1:
+                    st.markdown(f"<div class='metric-col'><div class='metric-val'>{total_skills}</div><div class='metric-label'>Skills Assessed</div></div>", unsafe_allow_html=True)
+                with m_col2:
+                    st.markdown(f"<div class='metric-col'><div class='metric-val {metric_color}'>{gaps}</div><div class='metric-label'>Gaps Found</div></div>", unsafe_allow_html=True)
+                with m_col3:
+                    st.markdown(f"<div class='metric-col'><div class='metric-val {metric_color}'>12</div><div class='metric-label'>Weeks to Ready</div></div>", unsafe_allow_html=True)
                     
-            roadmap = st.session_state.roadmap
-            if isinstance(roadmap, dict) and "Error" not in roadmap:
-                cols = st.columns(3)
-                for idx, (week, details) in enumerate(roadmap.items()):
-                    with cols[idx % 3]:
-                        st.markdown(f"""
-                        <div class="glass-card" style="height: 100%;">
-                            <h4 class="gradient-text">{week}</h4>
-                            <p>⏱️ <b>{details.get('time_estimate', 'N/A')}</b></p>
-                            <hr style="border-color: rgba(255,255,255,0.1)">
-                            <b>Topics:</b>
-                            <ul>{''.join([f'<li>{t}</li>' for t in details.get('topics', [])])}</ul>
-                            <b>Resources:</b>
-                            <ul>{''.join([f'<li>{r}</li>' for r in details.get('resources', [])])}</ul>
-                        </div>
-                        """, unsafe_allow_html=True)
-            else:
-                st.write(roadmap)
+            st.markdown("</div>", unsafe_allow_html=True)
+            
+        # 2. SKILL BREAKDOWN CARDS
+        st.markdown("<h4 style='margin-top: 30px; margin-bottom: 15px;'>Detailed Skill Analysis</h4>", unsafe_allow_html=True)
+        
+        all_skills = st.session_state.required_skills
+        
+        # Display skills in a responsive grid using Streamlit columns
+        if all_skills:
+            cols = st.columns(2)
+            for i, skill in enumerate(all_skills):
+                is_matched = skill in st.session_state.matched_skills
+                with cols[i % 2]:
+                    render_skill_card(skill, is_matched)
 
-        if st.button("Start Over (HR Portal)"):
+        st.divider()
+        if st.button("Start New Assessment"):
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
             st.rerun()
